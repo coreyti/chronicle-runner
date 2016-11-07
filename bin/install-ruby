@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -eo pipefail
+
+RUBY_INSTALL_VER="0.6.0"
+RUBY_INSTALL_URL=https://github.com/postmodern/ruby-install/archive/v${RUBY_INSTALL_VER}.tar.gz
+
+echo "Installing ruby-install v${RUBY_INSTALL_VER}..."
+wget -O ruby-install-${RUBY_INSTALL_VER}.tar.gz $RUBY_INSTALL_URL
+tar -xzvf ruby-install-${RUBY_INSTALL_VER}.tar.gz
+cd ruby-install-${RUBY_INSTALL_VER}/
+make install
+cd ..
+rm -rf ruby-install-${RUBY_INSTALL_VER}/
+rm ruby-install-${RUBY_INSTALL_VER}.tar.gz
+
+install_ruby() {
+  local version=$1
+  local sha=$2
+
+  echo "Installing ruby $version..."
+  ruby-install --system --sha256 "$sha" ruby "$version"
+
+  ruby -v
+  gem update --system
+  gem install bundler
+}
+
+install_ruby 2.3.1 4a7c5f52f205203ea0328ca8e1963a7a88cf1f7f0e246f857d595b209eac0a4d

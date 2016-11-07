@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -eo pipefail
+
+install_gem() {
+  local name=$1
+
+  echo "Installing gem '${name}' for ruby '$(ruby -v | cut -d ' ' -f 2)'..."
+  gem install ${name} --no-ri --no-rdoc --bindir /usr/local/bin
+}
+
+install_gem qa-tool
